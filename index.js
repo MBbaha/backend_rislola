@@ -62,8 +62,8 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Asosiy marshrutlar
-app.use("/api", userRoute);
-app.use("/api", usersKvitansiyaRoute);
+app.use("/api/users", userRoute);
+app.use("/api/kvitansiya", usersKvitansiyaRoute);
 
 // ✅ Serverni ishga tushirish
 const PORT = process.env.PORT || 5000;
