@@ -13,7 +13,7 @@ const app = express();
 // ✅ CORS OPTIONS — faqat frontenddan kirishga ruxsat
 const corsOptions = {
   origin: "https://risola-frontend2.onrender.com",
-  methods: ["POST","GET", "PUT", "DELETE",],
+  methods: ["POST", "GET", "PUT", "DELETE"],
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -41,12 +41,18 @@ const swaggerOptions = {
     info: {
       title: "Risola API",
       version: "1.0.0",
-      description: "API documentation using Swagger",
+      description: "API documentation for Risola project",
     },
-    servers: [{ url: "https://backend-risola.onrender.com" }],
+    servers: [
+      {
+        url: "https://backend-risola.onrender.com/api", // bu yerga /api qo‘shish kerak!
+        description: "Production server",
+      },
+    ],
   },
-  apis: ["./routes/*.js"],
+  apis: ["./routes/*.js"], // route fayllar ichida yozilgan Swagger commentlar o‘qiladi
 };
+
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
@@ -55,7 +61,7 @@ app.get("/", (req, res) => {
   res.send("✅ Risola backend ishlayapti!");
 });
 
-// ✅ Marshrutlar
+// ✅ Asosiy marshrutlar
 app.use("/api", userRoute);
 app.use("/api", usersKvitansiyaRoute);
 
