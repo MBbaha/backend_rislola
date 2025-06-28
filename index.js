@@ -10,14 +10,27 @@ const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 
-// ✅ CORS OPTIONS — faqat frontenddan kirishga ruxsat
+// ✅ CORS OPTIONS — bir nechta frontend domenlariga ruxsat
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://risola-frontend2.onrender.com"
+];
+
 const corsOptions = {
-  origin: "https://risola-frontend2.onrender.com",
-  methods: ["POST", "GET", "PUT", "DELETE"],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS xatolik: ruxsat etilmagan domen"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
+
+// ✅ CORS middleware — eng yuqoriga qo‘yish kerak!
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // OPTIONS preflight uchun
+app.options("*", cors(corsOptions));
 
 // ✅ JSON bodyni o‘qish
 app.use(express.json());
@@ -26,9 +39,9 @@ app.use(express.json());
 async function connectToDB() {
   try {
     await connect(process.env.MONGODB_URL);
-    console.log("✅ MongoDB connected");
+    console.log("✅ MongoDB ulanish muvaffaqiyatli");
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err.message);
+    console.error("❌ MongoDB ulanishda xatolik:", err.message);
     process.exit(1);
   }
 }
@@ -45,12 +58,12 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://backend-risola.onrender.com/api", // bu yerga /api qo‘shish kerak!
+        url: "https://backend-rislola.onrender.com/api", // 💡 Diqqat: to‘g‘ri domen nomi bo‘lsin!
         description: "Production server",
       },
     ],
   },
-  apis: ["./routes/*.js"], // route fayllar ichida yozilgan Swagger commentlar o‘qiladi
+  apis: ["./routes/*.js"], // Swagger commentlar shu fayllarda bo‘lishi kerak
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
@@ -62,11 +75,11 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Asosiy marshrutlar
-app.use("/api/users", userRoute);
-app.use("/api/kvitansiya", usersKvitansiyaRoute);
+app.use("/api", userRoute);
+app.use("/api", usersKvitansiyaRoute);
 
 // ✅ Serverni ishga tushirish
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server port ${PORT} da ishga tushdi`);
 });
