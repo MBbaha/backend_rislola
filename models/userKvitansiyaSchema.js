@@ -6,7 +6,7 @@ const UserKvitansiyaSchema = new Schema(
     phonenumber: { type: String, required: true, trim: true },
     sana: { type: String, required: true },
     summa: { type: String, required: true },
-    tartibraqam: { type: String, required: true },
+    tartibraqam: { type: String, },
     qoshimchatolov: { type: String, required: true },
     amountpeople: { type: String, required: true },
     amountroom: { type: String, required: true },
