@@ -5,7 +5,7 @@ const userKvitansiyaRegisterValidationSchema = Joi.object({
   phonenumber: Joi.string().trim().length(13).required(),
   sana: Joi.string().required(), // yoki .isoDate()
   summa: Joi.string().required(),
-  tartibraqam: Joi.string().required(),
+  tartibraqam: Joi.string(),
   qoshimchatolov: Joi.string().required(),
   amountpeople: Joi.string().required(),
   amountroom: Joi.string().required(),
