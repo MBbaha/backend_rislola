@@ -12,14 +12,13 @@ const app = express();
 
 // ✅ Ruxsat etilgan frontend domenlar
 const allowedOrigins = [
-  "https://risola-frontend2.onrender.com",
-  "http://localhost:3000", // 🧪 local test uchun
+  "https://risola-frontend2.onrender.com"
 ];
 
-// ✅ CORS sozlamasi
+// ✅ CORS opsiyasi
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("Kelgan origin:", origin); // log
+    console.log("Kelgan origin:", origin); // loglash
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -30,9 +29,25 @@ const corsOptions = {
   credentials: true,
 };
 
-// ✅ CORS middleware HAR DOIM express.json() DAN OLDIN!
+// ✅ CORS middleware birinchi bo‘lishi kerak
 app.use(cors(corsOptions));
+
+// ✅ JSON parser
 app.use(express.json());
+
+// ✅ Preflight OPTIONS so‘rovga javob (muqim ishlashi uchun)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://risola-frontend2.onrender.com");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 // ✅ MongoDB ulanish
 async function connectToDB() {
@@ -73,11 +88,11 @@ app.get("/", (req, res) => {
   res.send("✅ Risola backend ishlayapti!");
 });
 
-// ✅ API marshrutlar
+// ✅ API route-lar
 app.use("/api/users", userRoute);
 app.use("/api/userKvitansiya", usersKvitansiyaRoute);
 
-// ✅ Server ishga tushirish
+// ✅ Port va server ishga tushurish
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server port ${PORT} da ishga tushdi`);
