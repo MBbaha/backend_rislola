@@ -25,13 +25,21 @@ const corsOptions = {
       callback(new Error("CORS xatolik: ruxsat etilmagan domen"));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // ✅ OPTIONS bor
   credentials: true,
 };
 
-// ✅ CORS middleware — eng yuqorida bo‘lishi shart
+// ✅ CORS middleware
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+
+// ❌ Bu qator kerak emas (ba'zida preflight xatolik chiqaradi)
+// app.options("*", cors(corsOptions)); 
+
+// ✅ So‘rovlar logi (debug uchun)
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url} — from: ${req.headers.origin}`);
+  next();
+});
 
 // ✅ JSON bodyni o‘qish
 app.use(express.json());
@@ -59,23 +67,23 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://risola-backend.onrender.com/api", // ✅ TO‘G‘RI URL!
+        url: "https://risola-backend.onrender.com/api",
         description: "Production server (Render)",
       },
     ],
   },
-  apis: ["./routes/*.js"], // Swagger anotatsiyalar shu fayllarda
+  apis: ["./routes/*.js"],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// ✅ Test route (asosiy URL tekshirish uchun)
+// ✅ Test route
 app.get("/", (req, res) => {
   res.send("✅ Risola backend ishlayapti!");
 });
 
-// ✅ Marshrutlar (barchasi /api bilan boshlanadi)
+// ✅ Marshrutlar
 app.use("/api", userRoute);
 app.use("/api", usersKvitansiyaRoute);
 
