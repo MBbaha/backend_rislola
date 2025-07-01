@@ -27,6 +27,11 @@ const corsOptions = {
   credentials: true,
 };
 
+// ✅ CORS middleware-ni qo'llash (bu yerda)
+app.use(cors(corsOptions));
+
+// JSON formatida body qabul qilish uchun middleware
+app.use(express.json());
 
 // ✅ MongoDB ulanish
 async function connectToDB() {
@@ -60,10 +65,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.get("/", (req, res) => {
   res.send("✅ Risola backend ishlayapti!");
 });
+
+// ✅ API routes
 app.use("/api/users", userRoute);
 app.use("/api/userKvitansiya", usersKvitansiyaRoute);
-
-
 
 // ✅ Serverni ishga tushirish
 const PORT = process.env.PORT || 5000;
