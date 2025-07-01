@@ -2,7 +2,6 @@ const express = require("express");
 const { connect } = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
-
 const userRoute = require("./routes/user.route");
 const usersKvitansiyaRoute = require("./routes/userKvitansiya.route");
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -10,37 +9,25 @@ const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 
-// ✅ Ruxsat etilgan frontend domenlar
-const allowedOrigins = [
-  "https://risola-frontend2.onrender.com"
-];
-
-// ✅ CORS sozlamalari
+// ✅ CORS OPTIONS
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS xatolik: ruxsat etilmagan domen"));
-    }
-  },
+  origin: "https://risola-frontend2.onrender.com", // frontend domeni
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
-
-// ✅ CORS middleware birinchi bo‘lishi kerak
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // OPTIONS so‘rovlari uchun
 
-// ✅ JSON parser
+// ✅ JSON bodyni o‘qish
 app.use(express.json());
 
 // ✅ MongoDB ulanish
 async function connectToDB() {
   try {
     await connect(process.env.MONGODB_URL);
-    console.log("✅ MongoDB ulanish muvaffaqiyatli");
+    console.log("✅ MongoDB connected");
   } catch (err) {
-    console.error("❌ MongoDB ulanishda xatolik:", err.message);
+    console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   }
 }
@@ -53,18 +40,12 @@ const swaggerOptions = {
     info: {
       title: "Risola API",
       version: "1.0.0",
-      description: "API documentation for Risola project",
+      description: "API documentation using Swagger",
     },
-    servers: [
-      {
-        url: "https://risola-backend.onrender.com/api",
-        description: "Production server (Render)",
-      },
-    ],
+    servers: [{ url: "https://risola-backend.onrender.com" }],
   },
   apis: ["./routes/*.js"],
 };
-
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
@@ -72,13 +53,13 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.get("/", (req, res) => {
   res.send("✅ Risola backend ishlayapti!");
 });
-
-// ✅ API route-lar
 app.use("/api/users", userRoute);
 app.use("/api/userKvitansiya", usersKvitansiyaRoute);
 
-// ✅ Port va serverni ishga tushurish
+
+
+// ✅ Serverni ishga tushirish
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
