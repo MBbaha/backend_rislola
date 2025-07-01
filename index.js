@@ -58,7 +58,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://backend-rislola.onrender.com/api", // 💡 Diqqat: to‘g‘ri domen nomi bo‘lsin!
+        url: "https://backend-rislola.onrender.com", // 💡 Diqqat: to‘g‘ri domen nomi bo‘lsin!
         description: "Production server",
       },
     ],
