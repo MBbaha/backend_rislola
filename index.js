@@ -10,7 +10,7 @@ const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 
-// ✅ CORS OPTIONS — bir nechta frontend domenlariga ruxsat
+// ✅ CORS OPTIONS — frontendlardan ruxsat berilgan originlar
 const allowedOrigins = [
   "http://localhost:3000",
   "https://risola-frontend2.onrender.com"
@@ -18,17 +18,18 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log("Kelgan origin:", origin); // 🔍 log uchun
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("CORS xatolik: ruxsat etilmagan domen"));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", ],
   credentials: true,
 };
 
-// ✅ CORS middleware — eng yuqoriga qo‘yish kerak!
+// ✅ CORS middleware — eng yuqorida bo‘lishi shart
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
@@ -58,23 +59,23 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://backend-rislola.onrender.com", // 💡 Diqqat: to‘g‘ri domen nomi bo‘lsin!
-        description: "Production server",
+        url: "https://risola-backend.onrender.com/api", // ✅ TO‘G‘RI URL!
+        description: "Production server (Render)",
       },
     ],
   },
-  apis: ["./routes/*.js"], // Swagger commentlar shu fayllarda bo‘lishi kerak
+  apis: ["./routes/*.js"], // Swagger anotatsiyalar shu fayllarda
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// ✅ Test route
+// ✅ Test route (asosiy URL tekshirish uchun)
 app.get("/", (req, res) => {
   res.send("✅ Risola backend ishlayapti!");
 });
 
-// ✅ Asosiy marshrutlar
+// ✅ Marshrutlar (barchasi /api bilan boshlanadi)
 app.use("/api", userRoute);
 app.use("/api", usersKvitansiyaRoute);
 
