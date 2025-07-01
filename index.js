@@ -84,8 +84,8 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Marshrutlar
-app.use("/api", userRoute);
-app.use("/api", usersKvitansiyaRoute);
+app.use("/api/", userRoute);
+app.use("/api/userKvitansiya", usersKvitansiyaRoute);
 
 // ✅ Serverni ishga tushirish
 const PORT = process.env.PORT || 5000;
