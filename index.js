@@ -12,7 +12,7 @@ const app = express();
 
 // ✅ CORS OPTIONS — frontendlardan ruxsat berilgan originlar
 const allowedOrigins = [
-  "http://localhost:3000",
+  
   "https://risola-frontend2.onrender.com"
 ];
 
@@ -30,10 +30,13 @@ const corsOptions = {
 };
 
 // ❗ CORS HAR DOIM JSON middlewaredan oldin yozilishi kerak
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // OPTIONS so‘rovlar uchun
+app.use (express.json())
+app.use(
+    cors({
+        origin:"*"
+    })
+);
 
-app.use(express.json()); // JSON parser keyin turadi
 
 
 
@@ -77,7 +80,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Marshrutlar
-app.use("/api/", userRoute);
+app.use("/api/users", userRoute);
 app.use("/api/userKvitansiya", usersKvitansiyaRoute);
 
 // ✅ Serverni ishga tushirish
