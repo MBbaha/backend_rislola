@@ -10,16 +10,23 @@ const swaggerUi = require("swagger-ui-express");
 const app = express();
 
 // ✅ CORS OPTIONS
+const allowedOrigins = [
+  "https://risola-frontend2.onrender.com",
+  "http://localhost:3000"
+];
+
 const corsOptions = {
-  origin: "https://risola-frontend2.onrender.com", // frontend domeni
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Ruxsat berilgan
+    } else {
+      callback(new Error("CORS xatolik: Ruxsat etilmagan domen"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // OPTIONS so‘rovlari uchun
 
-// ✅ JSON bodyni o‘qish
-app.use(express.json());
 
 // ✅ MongoDB ulanish
 async function connectToDB() {
