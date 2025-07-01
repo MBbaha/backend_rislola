@@ -10,35 +10,29 @@ const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 
-// ✅ CORS OPTIONS — frontendlardan ruxsat berilgan originlar
+// ✅ Ruxsat etilgan frontend domenlar
 const allowedOrigins = [
-  
-  "https://risola-frontend2.onrender.com"
+  "https://risola-frontend2.onrender.com",
+  "http://localhost:3000", // 🧪 local test uchun
 ];
 
+// ✅ CORS sozlamasi
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("Kelgan origin:", origin); // 🔍 log uchun
+    console.log("Kelgan origin:", origin); // log
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("CORS xatolik: ruxsat etilmagan domen"));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // ✅ OPTIONS bor
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
 
-// ❗ CORS HAR DOIM JSON middlewaredan oldin yozilishi kerak
-app.use (express.json())
-app.use(
-    cors({
-        origin:"*"
-    })
-);
-
-
-
+// ✅ CORS middleware HAR DOIM express.json() DAN OLDIN!
+app.use(cors(corsOptions));
+app.use(express.json());
 
 // ✅ MongoDB ulanish
 async function connectToDB() {
@@ -79,11 +73,11 @@ app.get("/", (req, res) => {
   res.send("✅ Risola backend ishlayapti!");
 });
 
-// ✅ Marshrutlar
+// ✅ API marshrutlar
 app.use("/api/users", userRoute);
 app.use("/api/userKvitansiya", usersKvitansiyaRoute);
 
-// ✅ Serverni ishga tushirish
+// ✅ Server ishga tushirish
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server port ${PORT} da ishga tushdi`);
