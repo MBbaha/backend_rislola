@@ -29,20 +29,13 @@ const corsOptions = {
   credentials: true,
 };
 
-// ✅ CORS middleware
+// ❗ CORS HAR DOIM JSON middlewaredan oldin yozilishi kerak
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // OPTIONS so‘rovlar uchun
 
-// ❌ Bu qator kerak emas (ba'zida preflight xatolik chiqaradi)
-// app.options("*", cors(corsOptions)); 
+app.use(express.json()); // JSON parser keyin turadi
 
-// ✅ So‘rovlar logi (debug uchun)
-app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.url} — from: ${req.headers.origin}`);
-  next();
-});
 
-// ✅ JSON bodyni o‘qish
-app.use(express.json());
 
 // ✅ MongoDB ulanish
 async function connectToDB() {
