@@ -10,6 +10,7 @@ const userKvitansiyaRegisterValidationSchema = Joi.object({
   amountpeople: Joi.string().required(),
   amountroom: Joi.string().required(),
   location:Joi.string().required(),
+  dollar:Joi.string().required(),
 
   isactive: Joi.boolean().required(),
 });
@@ -24,6 +25,7 @@ const userKvitansiyaUpdateValidationSchema = Joi.object({
   amountpeople: Joi.string(),
   amountroom: Joi.string(),
   location:Joi.string(),
+  dollar:Joi.string(),
 
   isactive: Joi.boolean(),
 });
