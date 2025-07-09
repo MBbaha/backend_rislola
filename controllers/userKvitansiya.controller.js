@@ -11,6 +11,7 @@ const postRegister = async (req, res) => {
       qoshimchatolov,
       amountpeople,
       amountroom,
+      dollar,
       location,
 
       isactive, } = req.body;
@@ -35,7 +36,7 @@ const postRegister = async (req, res) => {
       amountpeople,
       amountroom,
       location,
-   
+      dollar,
       isactive,
     });
 
