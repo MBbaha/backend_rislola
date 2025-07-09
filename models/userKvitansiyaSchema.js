@@ -11,6 +11,7 @@ const UserKvitansiyaSchema = new Schema(
     amountpeople: { type: String, required: true },
     amountroom: { type: String, required: true },
     location: { type: String, required: true },
+    dollar:{type:String,required:true},
    
 
     // username: {
